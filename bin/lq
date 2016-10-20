@@ -6,9 +6,10 @@ require 'commander/import'
 require 'log_query/messages'
 require 'log_query/log_entry'
 require 'log_query/screen'
+require 'log_query/version'
 
 program :name, 'Log Query'
-program :version, '0.1.0'
+program :version, LogQuery::VERSION
 program :description, 'CLI based analytics for heroku logs'
 
 global_option('-g', '--group_by ATTRIBUTE', 'Attribute to group by')
