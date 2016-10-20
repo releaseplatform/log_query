@@ -8,7 +8,7 @@ require_relative './log_entry'
 require_relative './screen'
 
 program :name, 'Log Query'
-program :version, '1.0.0'
+program :version, '0.1.0'
 program :description, 'CLI based analytics for heroku logs'
 
 global_option('-g', '--group_by ATTRIBUTE', 'Attribute to group by')
