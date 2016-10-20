@@ -3,9 +3,9 @@
 require 'uri'
 require 'descriptive_statistics/safe'
 require 'commander/import'
-require_relative './messages'
-require_relative './log_entry'
-require_relative './screen'
+require 'log_query/messages'
+require 'log_query/log_entry'
+require 'log_query/screen'
 
 program :name, 'Log Query'
 program :version, '0.1.0'
