@@ -13,7 +13,7 @@ module Messages
     end
 
     def self.===((source, dyno))
-      @source == source and @dyno == dyno
+      source.match("^#{@source}$") and dyno.match("^#{dyno}$")
     end
   end
 end
