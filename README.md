@@ -22,7 +22,7 @@ Or install the binary as:
 
 `heroku logs --tail -n 1500 | lq --group_by path --measure service --average --varience --percentile 99`
 
-[log_query usage](/log_query.gif?raw=true)
+![log_query usage](/log_query.gif?raw=true)
 
 ## Development
 
