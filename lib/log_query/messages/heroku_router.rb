@@ -9,6 +9,10 @@ module Messages
     ATTRIBUTES = [:sock, :at, :code, :desc, :method, :path, :host, :request_id, :fwd, :dyno, :connect, :service, :status, :bytes]
     attr_accessor *ATTRIBUTES
 
+    def self.attributes
+      ATTRIBUTES
+    end
+
     def initialize(message)
       ATTRIBUTES.
         select { |attr| message.include?(" #{attr}=") }.
@@ -21,6 +25,7 @@ module Messages
           instance_variable_set("@#{key}", value)
         end
     end
+
 
     def parse_value(value, attribute)
       case attribute

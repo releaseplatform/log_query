@@ -16,6 +16,7 @@ global_option('-g', '--group_by ATTRIBUTE', 'Attribute to group by')
 global_option('-m', '--measure ATTRIBUTE', 'Attribute to measure')
 global_option('-a', '--average', 'Perform average')
 global_option('-p', '--percentile NUMBER', Integer,'Find nth percentile')
+global_option('-c', '--count', 'Count instances of attribute')
 global_option('--variance', 'Perform variance')
 
 default_command :run
@@ -26,16 +27,35 @@ command :run do |c|
    screen = Screen.new
    ARGF.each_line do |line|
      entry = LogEntry.from_heroku_log_line(line)
-     entries << entry if entry.message.is_a?(Messages::HerokuRouter)
+     message = entry.message
 
-     screen.reset
-     entries.group_by { |e| e.message.send(options.group_by) }.
-       map { |k, es| [k, DescriptiveStatistics::Stats.new(es.map { |e| e.message.send(options.measure) })] }.
+     # check which type group_by is in
+     if options.group_by
+       unless Messages.class_from_attribute(options.group_by).detect { |klass| message.is_a?(klass) }
+         #screen.line("#{options.group_by} is not in #{message.class} with attributes #{message.class&.attributes}")
+         next
+       end
+     end
+
+     # check which type measure is in
+     unless Messages.class_from_attribute(options.measure).detect { |klass| message.is_a?(klass) }
+       #screen.line("#{options.measure} is not in #{message.class} with attributes #{message.class&.attributes}")
+       next
+     end
+
+     entries << entry
+     
+     data = entries.group_by { |e| e.message.send(options.group_by) } if options.group_by
+     data ||= { all: entries }
+
+     data.
+       map { |k, es| [k, DescriptiveStatistics::Stats.new(es.map { |e| e.message.send(options.measure) } )] }.
        map do |k, stats|
          line = "#{k}: "
          line += "mean: #{stats.mean.round(2)} " if options.average
          line += "variance: #{stats.variance.round(2)} " if options.variance
          line += "#{options.percentile}th: #{stats.percentile(options.percentile).round(2)} " if options.percentile
+         line += "count: #{stats.number} " if options.count
          screen.line(line)
        end
 
