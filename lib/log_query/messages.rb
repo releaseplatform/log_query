@@ -2,9 +2,9 @@ require_relative './messages/heroku_router'
 require_relative './messages/heroku_web/rails'
 
 module Messages
-  def self.class_from_attribute(attr)
+  def self.class_from_attributes(attrs)
     [HerokuRouter, HerokuWeb::Rails].select do |klass|
-      klass.attributes.include?(attr.to_sym)
+      attrs.map(&:to_sym).all? { |a| klass.attributes.include?(a) }
     end
   end
 

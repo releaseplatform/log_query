@@ -32,7 +32,7 @@ module Messages
       when :sock, :at, :code, :desc, :method, :host, :request_id, :fwd, :dyno, :status
         value
       when :path
-        value.split('?')[0]
+        value.split('?')[0].gsub(/-[a-f0-9]{64}/, '')
       when :connect, :service
         Integer(value.match(/([0-9]*)ms/)[1])
       when :bytes
